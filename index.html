@@ -328,6 +328,53 @@ body{background:linear-gradient(135deg,#f4ad68,#f8d1a8)}
   }
 }
 
+
+/* V12 – Lernhinweis für zweiteilige Verben */
+.word.verb-part-hint{outline:3px solid rgba(210,45,45,.3);background:rgba(255,225,225,.9)!important;border-radius:10px}
+.word.verb-part-hint-strong{animation:verbPartPulse .72s ease-in-out 3}
+@keyframes verbPartPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.13);box-shadow:0 0 0 9px rgba(210,45,45,.18)}}
+.verb-hint-text{font-weight:900;color:#b51f1f}
+
+
+/* V13 – Experten-Welt */
+.expert-btn{grid-column:1/-1;background:linear-gradient(135deg,#fff8d9,#ffe7a0)!important;border:3px solid #d59a00!important}
+.expert-btn small{color:#715300!important}
+.expert-intro{max-width:850px;margin:0 auto 18px;text-align:center;font-size:20px;line-height:1.45}
+.expert-path{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:14px;max-width:850px;margin:18px auto}
+.expert-card{background:#fff;border:2px solid #ead9bd;border-radius:20px;padding:18px;text-align:left;box-shadow:0 5px 15px rgba(0,0,0,.07)}
+.expert-card h3{margin:6px 0 8px;font-size:24px}.expert-card p{margin:5px 0;font-size:18px}
+.expert-card button{width:100%;margin-top:10px}
+.expert-symbol{display:inline-block;vertical-align:middle;margin-right:12px;position:relative;flex:none}
+.expert-symbol.numeral{width:0;height:0;border-left:25px solid transparent;border-right:25px solid transparent;border-bottom:43px solid #79aade}
+.expert-symbol.preposition{width:58px;height:34px;background:#00ad4d;border-radius:0 0 40px 40px}
+.expert-symbol.preposition:after{content:"";position:absolute;left:8px;top:-1px;width:42px;height:20px;background:white;border-radius:0 0 32px 32px}
+.expert-symbol.pronoun{width:0;height:0;border-left:25px solid transparent;border-right:25px solid transparent;border-bottom:70px solid #ad28ad}
+.expert-symbol.conjunction{width:62px;height:18px;background:#f5569a}
+.expert-row{display:flex;align-items:center;gap:10px}
+.learn-example{max-width:720px;margin:18px auto;padding:18px;border-radius:18px;background:#fff8e9;font-size:22px;line-height:1.55}
+.learn-example strong{font-size:26px}
+.mini-question{max-width:720px;margin:16px auto;text-align:center}
+.expert-choices{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:14px 0}
+.expert-choice{font-family:'nekoneko',system-ui,sans-serif;font-size:22px;padding:12px 18px;border-radius:14px}
+.expert-choice.good{background:#dff5df!important;outline:3px solid #72b672}
+.expert-choice.bad{background:#ffe2e2!important}
+.expert-progress{font-size:17px;text-align:center;margin-top:10px;color:#6d5c49}
+.tool.expert-tool span{font-size:14px}
+#expertToolbar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.expert-stage-pill{display:inline-block;background:#fff0bd;border-radius:999px;padding:6px 13px;margin:4px;font-weight:800}
+@media(max-width:650px){.expert-path{grid-template-columns:1fr}.expert-intro{font-size:18px}.expert-card p{font-size:17px}}
+
+
+#expertInstruction small{display:block;margin-top:7px;font-size:17px;font-weight:600;color:#6f5d4d}
+#expertMiniInstruction{font-size:22px;margin-bottom:8px}
+
+
+.expert-click-sentence{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin:16px auto 18px;max-width:760px}
+.expert-sentence-word{font-family:'nekoneko',system-ui,sans-serif;font-size:23px;background:transparent;border:0;border-radius:10px;padding:5px 4px;box-shadow:none;cursor:pointer}
+.expert-sentence-word:hover{background:#fff3cf}
+.expert-sentence-word.good{background:#dff5df!important;outline:3px solid #72b672}
+.expert-sentence-word.bad{background:#ffe2e2!important}
+
 </style>
 </head>
 <body>
@@ -354,7 +401,10 @@ body{background:linear-gradient(135deg,#f4ad68,#f8d1a8)}
       <small>Tippe alle Wörter der gesuchten Wortart an.</small>
     </button>
     <button class="big-btn" id="assignModeBtn" type="button"><span class="mode-symbols" aria-hidden="true"><i class="mini-shape noun"></i><i class="mini-shape article"></i><i class="mini-shape adjective"></i><i class="mini-shape verb"></i></span> Wortarten-Symbole zuordnen
-      <small>Ordne den Wörtern die passenden Symbole zu.</small>
+      <small>Ziehe das passende Wortarten-Symbol zu jedem Wort.</small>
+    </button>
+    <button class="big-btn expert-btn" id="expertModeBtn" type="button">⭐ Experten-Welt
+      <small>Entdecke Numerale, Präpositionen, Pronomen und Konjunktionen Schritt für Schritt.</small>
     </button>
   </div>
 </section>
@@ -376,6 +426,60 @@ body{background:linear-gradient(135deg,#f4ad68,#f8d1a8)}
     <button class="level-btn" data-level="2" type="button">🟡 Mittel</button>
     <button class="level-btn" data-level="3" type="button">🔴 Schwierig</button>
   </div>
+</section>
+
+
+<section id="expertHome" class="panel hidden">
+  <h2>⭐ Willkommen in der Experten-Welt!</h2>
+  <div class="expert-intro">
+    Nomen, Verben, Adjektive und Artikel kennst du schon richtig gut.
+    Jetzt kannst du <strong>vier neue Wortarten</strong> entdecken – immer eine nach der anderen.
+  </div>
+  <div class="expert-path">
+    <div class="expert-card"><div class="expert-row"><i class="expert-symbol numeral"></i><h3>Numerale</h3></div><p>Zahlwörter sagen dir zum Beispiel, <strong>wie viele</strong> es von etwas gibt.</p><button onclick="openExpertLearn('numeral')">🔎 Numerale kennenlernen</button></div>
+    <div class="expert-card"><div class="expert-row"><i class="expert-symbol preposition"></i><h3>Präpositionen</h3></div><p>Sie zeigen oft, <strong>wo</strong> oder in welcher Beziehung etwas steht.</p><button onclick="openExpertLearn('preposition')">🔎 Präpositionen kennenlernen</button></div>
+    <div class="expert-card"><div class="expert-row"><i class="expert-symbol pronoun"></i><h3>Pronomen</h3></div><p>Pronomen können für ein Nomen stehen: <strong>er, sie, es, wir …</strong></p><button onclick="openExpertLearn('pronoun')">🔎 Pronomen kennenlernen</button></div>
+    <div class="expert-card"><div class="expert-row"><i class="expert-symbol conjunction"></i><h3>Konjunktionen</h3></div><p>Konjunktionen verbinden Wörter oder Sätze: <strong>und, aber, weil …</strong></p><button onclick="openExpertLearn('conjunction')">🔎 Konjunktionen kennenlernen</button></div>
+  </div>
+  <button class="primary" onclick="startExpertPath()">🚀 Experten-Lernweg starten</button>
+  <div class="expert-progress">Der Lernweg beginnt leicht: zuerst kommt nur <strong>eine</strong> neue Wortart dazu.</div>
+</section>
+
+<section id="expertLearn" class="panel hidden">
+  <h2 id="expertLearnTitle"></h2>
+  <div id="expertLearnSymbol" style="text-align:center;margin:12px"></div>
+  <div id="expertLearnText" class="expert-intro"></div>
+  <div id="expertLearnExample" class="learn-example"></div>
+  <div class="mini-question">
+    <h3 id="expertMiniInstruction">Klicke auf die gesuchte Wortart im Satz.</h3>
+    <div id="expertMiniSentence" class="expert-click-sentence"></div>
+    <div id="expertMiniChoices" class="hidden"></div>
+    <div id="expertMiniFeedback"></div>
+  </div>
+  <button onclick="showOnly('expertHome')">← Zur Experten-Welt</button>
+</section>
+
+<section id="expertGame" class="hidden">
+  <div class="panel">
+    <div id="expertStageLabel"></div>
+    <div id="expertInstruction" style="font-size:22px;font-weight:800;margin-bottom:12px"></div>
+    <div id="expertToolbar"></div>
+  </div>
+  <div id="expertSentenceCard" class="panel"><div id="expertSentence" style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px"></div></div>
+  <div class="actions">
+    <button class="primary" id="expertCheckBtn" onclick="checkExpertTask()">✔ Überprüfen</button>
+    <button id="expertNextBtn" class="hidden" onclick="nextExpertTask()">➡ Nächster Satz</button>
+  </div>
+  <div id="expertFeedback"></div>
+  <div id="expertGameProgress" class="expert-progress"></div>
+</section>
+
+<section id="expertSummary" class="panel hidden">
+  <h2>🏆 Experten-Runde geschafft!</h2>
+  <p id="expertFinalMessage" style="font-size:22px;font-weight:800"></p>
+  <button class="primary" onclick="startExpertPath()">🔁 Lernweg noch einmal</button>
+  <button onclick="showOnly('expertHome')">⭐ Zur Experten-Welt</button>
+  <button onclick="goHome()">🏠 Zum Hauptmenü</button>
 </section>
 
 <section id="game" class="hidden">
@@ -419,50 +523,14 @@ body{background:linear-gradient(135deg,#f4ad68,#f8d1a8)}
 </section>
 
 <script>
-const DATA = {
-1:[
- [["Der","artikel"],["Prinz","nomen"],["lacht","verb"]],
- [["Die","artikel"],["Prinzessin","nomen"],["winkt","verb"]],
- [["Der","artikel"],["Kater","nomen"],["schläft","verb"]],
- [["Die","artikel"],["Rose","nomen"],["blüht","verb"]],
- [["Das","artikel"],["Pferd","nomen"],["läuft","verb"]],
- [["Der","artikel"],["Prinz","nomen"],["trägt","verb"],["eine","artikel"],["Krone","nomen"]],
- [["Die","artikel"],["Prinzessin","nomen"],["pflückt","verb"],["Blumen","nomen"]],
- [["Der","artikel"],["Tiger","nomen"],["findet","verb"],["einen","artikel"],["Schlüssel","nomen"]],
- [["Die","artikel"],["Fee","nomen"],["öffnet","verb"],["das","artikel"],["Tor","nomen"]],
- [["Der","artikel"],["Prinz","nomen"],["besucht","verb"],["den","artikel"],["Park","nomen"]]
-],
-2:[
- [["Der","artikel"],["mutige","adjektiv"],["Prinz","nomen"],["trägt","verb"],["eine","artikel"],["goldene","adjektiv"],["Krone","nomen"]],
- [["Die","artikel"],["freundliche","adjektiv"],["Prinzessin","nomen"],["pflückt","verb"],["rote","adjektiv"],["Blumen","nomen"]],
- [["Der","artikel"],["kleine","adjektiv"],["Kater","nomen"],["schläft","verb"],["auf","other"],["dem","artikel"],["weichen","adjektiv"],["Kissen","nomen"]],
- [["Im","other"],["Schlossgarten","nomen"],["sammelt","verb"],["der","artikel"],["Tiger","nomen"],["bunte","adjektiv"],["Blätter","nomen"]],
- [["Die","artikel"],["kluge","adjektiv"],["Fee","nomen"],["zeigt","verb"],["dem","artikel"],["Prinzen","nomen"],["einen","artikel"],["alten","adjektiv"],["Schlüssel","nomen"]],
- [["Der","artikel"],["Prinz","nomen"],["und","other"],["die","artikel"],["Prinzessin","nomen"],["besuchen","verb"],["den","artikel"],["großen","adjektiv"],["Park","nomen"]],
- [["Vor","other"],["der","artikel"],["Burg","nomen"],["steht","verb"],["ein","artikel"],["hoher","adjektiv"],["Baum","nomen"]],
- [["Die","artikel"],["Prinzessin","nomen"],["liest","verb"],["eine","artikel"],["spannende","adjektiv"],["Geschichte","nomen"]],
- [["Der","artikel"],["fröhliche","adjektiv"],["Tiger","nomen"],["trägt","verb"],["einen","artikel"],["runden","adjektiv"],["Kürbis","nomen"]],
- [["Die","artikel"],["kleine","adjektiv"],["Fee","nomen"],["zaubert","verb"],["ein","artikel"],["buntes","adjektiv"],["Herbstblatt","nomen"]]
-],
-3:[
- [["Im","other"],["Land","nomen"],["der","artikel"],["Wortarten","nomen"],["regieren","verb"],["der","artikel"],["mächtige","adjektiv"],["Prinz","nomen"],["und","other"],["die","artikel"],["kluge","adjektiv"],["Prinzessin","nomen"]],
- [["Der","artikel"],["Prinz","nomen"],["sammelt","verb"],["Namen","nomen"],["für","other"],["Menschen","nomen"],["Tiere","nomen"],["Pflanzen","nomen"],["und","other"],["Dinge","nomen"]],
- [["Die","artikel"],["freundliche","adjektiv"],["Prinzessin","nomen"],["zeigt","verb"],["dem","artikel"],["Tiger","nomen"],["eine","artikel"],["duftende","adjektiv"],["Rose","nomen"],["im","other"],["Schlossgarten","nomen"]],
- [["Am","other"],["Herbstmorgen","nomen"],["findet","verb"],["der","artikel"],["neugierige","adjektiv"],["Tiger","nomen"],["einen","artikel"],["goldenen","adjektiv"],["Schlüssel","nomen"],["vor","other"],["der","artikel"],["Burg","nomen"]],
- [["Die","artikel"],["Fee","nomen"],["zaubert","verb"],["einen","artikel"],["kleinen","adjektiv"],["Geist","nomen"],["und","other"],["schmückt","verb"],["das","artikel"],["alte","adjektiv"],["Schloss","nomen"]],
- [["Der","artikel"],["mutige","adjektiv"],["Prinz","nomen"],["öffnet","verb"],["die","artikel"],["schwere","adjektiv"],["Truhe","nomen"],["und","other"],["entdeckt","verb"],["eine","artikel"],["glänzende","adjektiv"],["Krone","nomen"]],
- [["Im","other"],["großen","adjektiv"],["Park","nomen"],["sammeln","verb"],["die","artikel"],["Prinzessin","nomen"],["und","other"],["der","artikel"],["Tiger","nomen"],["rote","adjektiv"],["Blätter","nomen"],["und","other"],["Kastanien","nomen"]],
- [["Der","artikel"],["Prinz","nomen"],["erklärt","verb"],["dem","artikel"],["Tiger","nomen"],["dass","other"],["Namenwörter","nomen"],["Menschen","nomen"],["Tiere","nomen"],["Pflanzen","nomen"],["und","other"],["Dinge","nomen"],["benennen","verb"]],
- [["Vor","other"],["dem","artikel"],["Wortartenschloss","nomen"],["leuchtet","verb"],["ein","artikel"],["großer","adjektiv"],["Kürbis","nomen"],["neben","other"],["einem","artikel"],["alten","adjektiv"],["Baum","nomen"]],
- [["Am","other"],["Abend","nomen"],["feiern","verb"],["der","artikel"],["Prinz","nomen"],["die","artikel"],["Prinzessin","nomen"],["der","artikel"],["Tiger","nomen"],["und","other"],["die","artikel"],["Fee","nomen"],["ein","artikel"],["fröhliches","adjektiv"],["Herbstfest","nomen"]]
-]};
+const DATA = {"1":[[["Der","artikel"],["Prinz","nomen"],["trägt","verb"],["eine","artikel"],["Krone.","nomen"]],[["Die","artikel"],["Fee","nomen"],["öffnet","verb"],["die","artikel"],["Tür.","nomen"]],[["Der","artikel"],["Tiger","nomen"],["sucht","verb"],["einen","artikel"],["Ball.","nomen"]],[["Der","artikel"],["Bär","nomen"],["kocht","verb"],["eine","artikel"],["Suppe.","nomen"]],[["Die","artikel"],["Katze","nomen"],["sieht","verb"],["den","artikel"],["Vogel.","nomen"]],[["Der","artikel"],["Ritter","nomen"],["bewacht","verb"],["das","artikel"],["Schloss.","nomen"]],[["Die","artikel"],["Prinzessin","nomen"],["pflückt","verb"],["eine","artikel"],["Rose.","nomen"]],[["Der","artikel"],["Prinz","nomen"],["findet","verb"],["den","artikel"],["Schlüssel.","nomen"]],[["Ein","artikel"],["Vogel","nomen"],["baut","verb"],["ein","artikel"],["Nest.","nomen"]],[["Die","artikel"],["Kinder","nomen"],["sammeln","verb"],["die","artikel"],["Blätter.","nomen"]],[["Der","artikel"],["kleine","adjektiv"],["Tiger","nomen"],["lacht.","verb"]],[["Die","artikel"],["rote","adjektiv"],["Rose","nomen"],["duftet.","verb"]],[["Der","artikel"],["alte","adjektiv"],["Bär","nomen"],["schläft.","verb"]],[["Die","artikel"],["nette","adjektiv"],["Fee","nomen"],["winkt.","verb"]],[["Der","artikel"],["mutige","adjektiv"],["Ritter","nomen"],["reitet.","verb"]],[["Die","artikel"],["bunte","adjektiv"],["Fahne","nomen"],["weht.","verb"]],[["Der","artikel"],["Tiger","nomen"],["trägt","verb"],["einen","artikel"],["roten","adjektiv"],["Ball.","nomen"]],[["Die","artikel"],["Prinzessin","nomen"],["liest","verb"],["ein","artikel"],["dickes","adjektiv"],["Buch.","nomen"]],[["Der","artikel"],["Bär","nomen"],["isst","verb"],["einen","artikel"],["roten","adjektiv"],["Apfel.","nomen"]],[["Die","artikel"],["Fee","nomen"],["trägt","verb"],["ein","artikel"],["blaues","adjektiv"],["Kleid.","nomen"]],[["Der","artikel"],["Prinz","nomen"],["öffnet","verb"],["die","artikel"],["alte","adjektiv"],["Truhe.","nomen"]],[["Ein","artikel"],["kleiner","adjektiv"],["Igel","nomen"],["sammelt","verb"],["Blätter.","nomen"]],[["Die","artikel"],["schwarze","adjektiv"],["Katze","nomen"],["jagt","verb"],["eine","artikel"],["Maus.","nomen"]],[["Der","artikel"],["kalte","adjektiv"],["Wind","nomen"],["bewegt","verb"],["die","artikel"],["Äste.","nomen"]],[["Die","artikel"],["gelben","adjektiv"],["Blätter","nomen"],["fallen","verb"],["vom","other"],["Baum.","nomen"]],[["Der","artikel"],["Prinz","nomen"],["sieht","verb"],["eine","artikel"],["schöne","adjektiv"],["Blume.","nomen"]],[["Der","artikel"],["Bär","nomen"],["backt","verb"],["einen","artikel"],["süßen","adjektiv"],["Kuchen.","nomen"]],[["Die","artikel"],["Kinder","nomen"],["besuchen","verb"],["den","artikel"],["großen","adjektiv"],["Park.","nomen"]],[["Der","artikel"],["Tiger","nomen"],["findet","verb"],["einen","artikel"],["runden","adjektiv"],["Kürbis.","nomen"]],[["Professor","nomen"],["Adjektiv","nomen"],["beschreibt","verb"],["das","artikel"],["große","adjektiv"],["Schloss.","nomen"]]],"2":[[["Der","artikel"],["kleine","adjektiv"],["Prinz","nomen"],["trägt","verb"],["eine","artikel"],["Krone.","nomen"]],[["Die","artikel"],["nette","adjektiv"],["Prinzessin","nomen"],["pflückt","verb"],["rote","adjektiv"],["Rosen.","nomen"]],[["Der","artikel"],["mutige","adjektiv"],["Ritter","nomen"],["bewacht","verb"],["das","artikel"],["Schloss.","nomen"]],[["Der","artikel"],["hungrige","adjektiv"],["Bär","nomen"],["kocht","verb"],["eine","artikel"],["Suppe.","nomen"]],[["Der","artikel"],["neugierige","adjektiv"],["Tiger","nomen"],["sucht","verb"],["einen","artikel"],["Schlüssel.","nomen"]],[["Die","artikel"],["kleine","adjektiv"],["Fee","nomen"],["öffnet","verb"],["das","artikel"],["Fenster.","nomen"]],[["Ein","artikel"],["bunter","adjektiv"],["Vogel","nomen"],["baut","verb"],["ein","artikel"],["Nest.","nomen"]],[["Die","artikel"],["schwarze","adjektiv"],["Katze","nomen"],["beobachtet","verb"],["den","artikel"],["Vogel.","nomen"]],[["Der","artikel"],["alte","adjektiv"],["Prinz","nomen"],["liest","verb"],["ein","artikel"],["Buch.","nomen"]],[["Die","artikel"],["Kinder","nomen"],["sammeln","verb"],["viele","other"],["bunte","adjektiv"],["Blätter.","nomen"]],[["Der","artikel"],["Tiger","nomen"],["trägt","verb"],["einen","artikel"],["großen","adjektiv"],["Kürbis.","nomen"]],[["Die","artikel"],["Prinzessin","nomen"],["findet","verb"],["eine","artikel"],["goldene","adjektiv"],["Krone.","nomen"]],[["Der","artikel"],["Bär","nomen"],["isst","verb"],["einen","artikel"],["süßen","adjektiv"],["Apfel.","nomen"]],[["Der","artikel"],["Ritter","nomen"],["öffnet","verb"],["die","artikel"],["schwere","adjektiv"],["Tür.","nomen"]],[["Die","artikel"],["Fee","nomen"],["besucht","verb"],["den","artikel"],["alten","adjektiv"],["Turm.","nomen"]],[["Ein","artikel"],["kleiner","adjektiv"],["Igel","nomen"],["sucht","verb"],["trockene","adjektiv"],["Blätter.","nomen"]],[["Der","artikel"],["kalte","adjektiv"],["Wind","nomen"],["bewegt","verb"],["hohe","adjektiv"],["Äste.","nomen"]],[["Die","artikel"],["Kinder","nomen"],["sehen","verb"],["einen","artikel"],["kleinen","adjektiv"],["Vogel.","nomen"]],[["Der","artikel"],["Prinz","nomen"],["sucht","verb"],["seine","other"],["alte","adjektiv"],["Krone.","nomen"]],[["Die","artikel"],["Katze","nomen"],["sitzt","verb"],["auf","other"],["dem","artikel"],["Sofa.","nomen"]],[["Der","artikel"],["Tiger","nomen"],["läuft","verb"],["durch","other"],["den","artikel"],["Wald.","nomen"]],[["Die","artikel"],["Rose","nomen"],["steht","verb"],["in","other"],["der","artikel"],["Vase.","nomen"]],[["Der","artikel"],["Bär","nomen"],["sitzt","verb"],["vor","other"],["dem","artikel"],["Haus.","nomen"]],[["Die","artikel"],["Fee","nomen"],["fliegt","verb"],["über","other"],["das","artikel"],["Schloss.","nomen"]],[["Der","artikel"],["Ritter","nomen"],["steht","verb"],["neben","other"],["der","artikel"],["Tür.","nomen"]],[["Die","artikel"],["Kinder","nomen"],["spielen","verb"],["in","other"],["dem","artikel"],["Garten.","nomen"]],[["Der","artikel"],["Prinz","nomen"],["geht","verb"],["mit","other"],["dem","artikel"],["Ritter.","nomen"]],[["Die","artikel"],["Prinzessin","nomen"],["sitzt","verb"],["auf","other"],["dem","artikel"],["Stuhl.","nomen"]],[["Der","artikel"],["Tiger","nomen"],["schläft","verb"],["unter","other"],["dem","artikel"],["Baum.","nomen"]],[["Professor","nomen"],["Adjektiv","nomen"],["sammelt","verb"],["viele","other"],["neue","adjektiv"],["Wörter.","nomen"]]],"3":[[["Der","artikel"],["Prinz","nomen"],["räumt","verb"],["die","artikel"],["alte","adjektiv"],["Truhe","nomen"],["auf.","verbpart"]],[["Die","artikel"],["Prinzessin","nomen"],["macht","verb"],["das","artikel"],["große","adjektiv"],["Fenster","nomen"],["zu.","verbpart"]],[["Der","artikel"],["Ritter","nomen"],["zieht","verb"],["die","artikel"],["schwere","adjektiv"],["Rüstung","nomen"],["an.","verbpart"]],[["Professor","nomen"],["Adjektiv","nomen"],["schreibt","verb"],["neue","adjektiv"],["Wörter","nomen"],["auf.","verbpart"]],[["Der","artikel"],["Tiger","nomen"],["bringt","verb"],["einen","artikel"],["runden","adjektiv"],["Kürbis","nomen"],["mit.","verbpart"]],[["Der","artikel"],["Bär","nomen"],["bereitet","verb"],["eine","artikel"],["warme","adjektiv"],["Suppe","nomen"],["vor.","verbpart"]],[["Der","artikel"],["Ritter","nomen"],["bringt","verb"],["den","artikel"],["goldenen","adjektiv"],["Schlüssel","nomen"],["zurück.","verbpart"]],[["Die","artikel"],["Fee","nomen"],["macht","verb"],["die","artikel"],["kleine","adjektiv"],["Tür","nomen"],["zu.","verbpart"]],[["Der","artikel"],["Prinz","nomen"],["zieht","verb"],["seinen","other"],["warmen","adjektiv"],["Mantel","nomen"],["an.","verbpart"]],[["Die","artikel"],["Kinder","nomen"],["räumen","verb"],["die","artikel"],["bunten","adjektiv"],["Karten","nomen"],["auf.","verbpart"]],[["Der","artikel"],["Tiger","nomen"],["sammelt","verb"],["Blätter","nomen"],["und","other"],["der","artikel"],["Bär","nomen"],["kocht.","verb"]],[["Die","artikel"],["Prinzessin","nomen"],["liest","verb"],["ein","artikel"],["Buch","nomen"],["und","other"],["der","artikel"],["Prinz","nomen"],["malt.","verb"]],[["Der","artikel"],["Ritter","nomen"],["öffnet","verb"],["die","artikel"],["Tür","nomen"],["und","other"],["die","artikel"],["Fee","nomen"],["lacht.","verb"]],[["Der","artikel"],["Bär","nomen"],["kocht","verb"],["Suppe","nomen"],["und","other"],["der","artikel"],["Tiger","nomen"],["deckt","verb"],["den","artikel"],["Tisch.","nomen"]],[["Die","artikel"],["Kinder","nomen"],["sammeln","verb"],["Kastanien","nomen"],["und","other"],["bunte","adjektiv"],["Blätter","nomen"],["im","other"],["Wald.","nomen"]],[["Der","artikel"],["Prinz","nomen"],["öffnet","verb"],["die","artikel"],["Truhe","nomen"],["und","other"],["findet","verb"],["eine","artikel"],["goldene","adjektiv"],["Krone.","nomen"]],[["Die","artikel"],["Katze","nomen"],["klettert","verb"],["auf","other"],["den","artikel"],["Baum","nomen"],["und","other"],["holt","verb"],["den","artikel"],["Drachen","nomen"],["zurück.","verbpart"]],[["Der","artikel"],["Tiger","nomen"],["bringt","verb"],["Pilze","nomen"],["mit","verbpart"],["und","other"],["der","artikel"],["Bär","nomen"],["kocht","verb"],["Suppe.","nomen"]],[["Die","artikel"],["Prinzessin","nomen"],["zieht","verb"],["ihr","other"],["Kleid","nomen"],["an","verbpart"],["und","other"],["öffnet","verb"],["die","artikel"],["Tür.","nomen"]],[["Der","artikel"],["Ritter","nomen"],["räumt","verb"],["den","artikel"],["Tisch","nomen"],["auf","verbpart"],["und","other"],["der","artikel"],["Prinz","nomen"],["hilft.","verb"]],[["Der","artikel"],["Prinz","nomen"],["lacht,","verb"],["weil","other"],["die","artikel"],["kleine","adjektiv"],["Fee","nomen"],["tanzt.","verb"]],[["Die","artikel"],["Prinzessin","nomen"],["wartet,","verb"],["bis","other"],["der","artikel"],["mutige","adjektiv"],["Ritter","nomen"],["kommt.","verb"]],[["Wenn","other"],["der","artikel"],["Wind","nomen"],["weht,","verb"],["fallen","verb"],["die","artikel"],["bunten","adjektiv"],["Blätter","nomen"],["herab.","other"]],[["Der","artikel"],["Tiger","nomen"],["freut","verb"],["sich,","other"],["weil","other"],["der","artikel"],["Bär","nomen"],["Suppe","nomen"],["kocht.","verb"]],[["Die","artikel"],["Fee","nomen"],["fliegt","verb"],["zum","other"],["Schloss,","nomen"],["weil","other"],["der","artikel"],["Prinz","nomen"],["sie","other"],["ruft.","verb"]],[["Wenn","other"],["die","artikel"],["Prinzessin","nomen"],["liest,","verb"],["sitzt","verb"],["der","artikel"],["kleine","adjektiv"],["Tiger","nomen"],["neben","other"],["ihr.","other"]],[["Der","artikel"],["Ritter","nomen"],["zieht","verb"],["die","artikel"],["Rüstung","nomen"],["an,","verbpart"],["bevor","other"],["er","other"],["das","artikel"],["Schloss","nomen"],["verlässt.","verb"]],[["Der","artikel"],["Bär","nomen"],["bereitet","verb"],["die","artikel"],["Suppe","nomen"],["vor,","verbpart"],["während","other"],["der","artikel"],["Tiger","nomen"],["den","artikel"],["Tisch","nomen"],["deckt.","verb"]],[["Die","artikel"],["Katze","nomen"],["bringt","verb"],["den","artikel"],["Drachen","nomen"],["zurück,","verbpart"],["nachdem","other"],["sie","other"],["auf","other"],["den","artikel"],["Baum","nomen"],["geklettert","verb"],["ist.","verb"]],[["Als","other"],["der","artikel"],["Prinz","nomen"],["die","artikel"],["alte","adjektiv"],["Truhe","nomen"],["öffnet,","verb"],["findet","verb"],["er","other"],["einen","artikel"],["goldenen","adjektiv"],["Schlüssel.","nomen"]]]};
 
 let mode=null,target=null,level=1,round=[],index=0,correctCount=0,checked=false,selectedTool=null,adaptiveLevel=1,successStreak=0,wrongAttempts=0;
 const types=["nomen","verb","adjektiv","artikel"];
 const names={nomen:"Nomen",verb:"Verben",adjektiv:"Adjektive",artikel:"Artikel"};
 
 function showOnly(id){
-  ["home","findChoice","levelChoice","game","summary"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+  ["home","findChoice","levelChoice","expertHome","expertLearn","expertGame","expertSummary","game","summary"].forEach(x=>document.getElementById(x).classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
   document.getElementById("menuBtn").classList.toggle("hidden",id==="home");
 }
@@ -470,15 +538,43 @@ function chooseMode(m){mode=m; target=null; showOnly(m==="find"?"findChoice":"le
 function chooseTarget(t){target=t;showOnly("levelChoice")}
 function startRound(l){
   level=l; adaptiveLevel=l; successStreak=0; index=0; correctCount=0;
-  round=[];
-  for(let i=0;i<10;i++){
-    const pool=[...DATA[adaptiveLevel]].sort(()=>Math.random()-.5);
-    round.push(pool[i % pool.length]);
-  }
-  showOnly("game"); renderTask();
+  round=[]; window.usedSentenceKeys=new Set();
+  showOnly("game"); pickNextSentence(); renderTask();
 }
-function punctuation(i){return i===round[index].length-1?".":""}
+function punctuation(i){return ""}
 function symbolHTML(type){return `<i class="symbol ${type}"></i>`}
+function pickNextSentence(){
+  const pool=DATA[adaptiveLevel];
+  const third=Math.ceil(pool.length/3);
+  let bandStart=index<3?0:(index<7?third:third*2);
+  let bandEnd=index<3?third:(index<7?Math.min(third*2,pool.length):pool.length);
+  let band=pool.slice(bandStart,bandEnd);
+  let available=band.filter(x=>!window.usedSentenceKeys.has(JSON.stringify(x)));
+  if(mode==="find" && target){
+    const withTarget=available.filter(sentence=>sentence.some(item=>item[1]===target));
+    if(withTarget.length) available=withTarget;
+    else {
+      const wholePoolWithTarget=pool.filter(sentence =>
+        !window.usedSentenceKeys.has(JSON.stringify(sentence)) &&
+        sentence.some(item=>item[1]===target)
+      );
+      if(wholePoolWithTarget.length) available=wholePoolWithTarget;
+    }
+  }
+  if(!available.length){
+    available=pool.filter(sentence =>
+      mode!=="find" || !target || sentence.some(item=>item[1]===target)
+    );
+  }
+  const chosen=available[Math.floor(Math.random()*available.length)];
+  window.usedSentenceKeys.add(JSON.stringify(chosen));
+  round[index]=chosen;
+}
+
+function directFindInstruction(){
+  const labels={nomen:"Nomen",verb:"Verben",adjektiv:"Adjektive",artikel:"Artikel"};
+  return "Klicke auf alle "+(labels[target]||"gesuchten Wörter")+" im Satz.";
+}
 function renderTask(){
   checked=false;selectedTool=null;wrongAttempts=0;
   document.getElementById("feedback").textContent="";
@@ -489,24 +585,24 @@ function renderTask(){
   const targetSymbol=document.getElementById("targetSymbol");
   if(mode==="find"){
     toolbar.classList.add("hidden");
-    document.getElementById("instruction").textContent=`Finde alle ${names[target]}!`;
+    document.getElementById("instruction").textContent = mode==="find" ? directFindInstruction() : "Ziehe das passende Wortarten-Symbol zu jedem Wort.";
     targetSymbol.innerHTML=symbolHTML(target);
   }else{
     toolbar.classList.remove("hidden");
     targetSymbol.innerHTML="";
-    document.getElementById("instruction").textContent="Bestimme die Wortarten!";
+    document.getElementById("instruction").textContent="Ziehe das passende Wortarten-Symbol zu jedem Wort.";
   }
   const s=document.getElementById("sentence");s.innerHTML="";
   round[index].forEach((item,i)=>{
     const span=document.createElement("span");
-    span.className="word";span.dataset.index=i;span.dataset.correct=item[1];span.dataset.assigned="";
+    span.className="word";span.dataset.index=i;span.dataset.correct=(item[1]==="verbpart"?"other":item[1]);span.dataset.verbPart=(item[1]==="verbpart"?"true":"false");span.dataset.assigned="";
     span.innerHTML=`<span>${item[0]}${punctuation(i)}</span>`;
     span.addEventListener("click",()=>wordClicked(span));
     span.addEventListener("dragover",e=>e.preventDefault());
     span.addEventListener("drop",e=>{e.preventDefault();assign(span,e.dataTransfer.getData("text/plain"))});
     s.appendChild(span);
   });
-  document.getElementById("progress").textContent=`Satz ${index+1} von ${round.length} · Niveau ${adaptiveLevel}`;
+  document.getElementById("progress").textContent=`Satz ${index+1} von 10 · Niveau ${adaptiveLevel===1?"einfach":adaptiveLevel===2?"mittel":"schwierig"}`;
 }
 function wordClicked(el){
   if(checked)return;
@@ -534,80 +630,75 @@ document.querySelectorAll(".tool").forEach(tool=>{
   },{passive:true});
 });
 function checkTask(){
-  let ok=true;
-  const results=[];
-
+  let ok=true, results=[], optionalParts=[];
   document.querySelectorAll(".word").forEach(el=>{
-    el.classList.remove("correct","wrong","missed");
-    const correct=el.dataset.correct;
-    let wordOK=true;
-    let state="";
-
+    el.classList.remove("correct","wrong","missed","verb-part-hint","verb-part-hint-strong");
+    const correct=el.dataset.correct, isPart=el.dataset.verbPart==="true";
+    let state="", wordOK=true;
     if(mode==="find"){
-      const should=correct===target, chosen=el.classList.contains("selected");
-      if(chosen&&should){ state="correct"; }
-      else if(chosen&&!should){ wordOK=false; state="wrong"; }
-      else if(!chosen&&should){ wordOK=false; state="missed"; }
+      const chosen=el.classList.contains("selected");
+      if(target==="verb" && isPart){
+        if(chosen) state="correct"; else optionalParts.push(el);
+      }else{
+        const should=correct===target;
+        if(chosen&&should) state="correct";
+        else if(chosen&&!should){wordOK=false;state="wrong";}
+        else if(!chosen&&should){wordOK=false;state="missed";}
+      }
     }else{
       const assigned=el.dataset.assigned;
-      if(types.includes(correct)){
-        if(assigned===correct){ state="correct"; }
-        else { wordOK=false; state=assigned?"wrong":"missed"; }
-      }else if(assigned){
-        wordOK=false; state="wrong";
-      }
+      if(isPart){
+        if(!assigned) optionalParts.push(el);
+        else if(assigned==="verb") state="correct";
+        else {wordOK=false;state="wrong";}
+      }else if(types.includes(correct)){
+        if(assigned===correct) state="correct";
+        else {wordOK=false;state=assigned?"wrong":"missed";}
+      }else if(assigned){wordOK=false;state="wrong";}
     }
-
     if(!wordOK) ok=false;
     results.push({el,state});
   });
 
   if(ok){
-    results.forEach(r=>{ if(r.state) r.el.classList.add(r.state); });
-    checked=true; correctCount++; successStreak++;
-    if(successStreak>=2&&adaptiveLevel<3){adaptiveLevel++;successStreak=0}
-    document.getElementById("feedback").textContent="Richtig! ⭐ Super gemacht.";
+    results.forEach(r=>{if(r.state)r.el.classList.add(r.state)});
+    checked=true;correctCount++;successStreak++;
+    if(successStreak>=2){if(adaptiveLevel<level) adaptiveLevel++;successStreak=0}
+    if(optionalParts.length && (target==="verb" || mode!=="find")){
+      optionalParts.forEach(el=>el.classList.add("verb-part-hint"));
+      setTimeout(()=>optionalParts.forEach(el=>el.classList.add("verb-part-hint-strong")),180);
+      const parts=optionalParts.map(el=>el.textContent.replace(/[.,!?;:]/g,"")).join(", ");
+      document.getElementById("feedback").innerHTML=`Richtig! ⭐ Du hast das Verb erkannt.<br><strong>Schau mal:</strong> Dieses Verb hat zwei Teile. <span class="verb-hint-text">${parts}</span> gehört auch dazu.`;
+    }else document.getElementById("feedback").textContent="Richtig! ⭐ Super gemacht.";
     document.getElementById("checkBtn").classList.add("hidden");
     document.getElementById("nextBtn").classList.remove("hidden");
     return;
   }
 
-  wrongAttempts++;
-  successStreak=0;
-
-  // No highlighting after the first mistake.
+  wrongAttempts++;successStreak=0;
   if(wrongAttempts===1){
     document.getElementById("feedback").textContent="Schau noch einmal genau hin. Du darfst es noch zweimal versuchen.";
     return;
   }
-
-  // From the second mistake onward, visual help appears.
-  results.forEach(r=>{
-    if(r.state==="wrong" || r.state==="missed") r.el.classList.add(r.state);
-  });
-
+  results.forEach(r=>{if(r.state==="wrong"||r.state==="missed")r.el.classList.add(r.state)});
   if(wrongAttempts>=3){
-    if(adaptiveLevel>1){
-      adaptiveLevel--;
-      document.getElementById("feedback").textContent="Das war noch knifflig. 🌱 Der nächste Satz wird etwas leichter.";
-    }else{
-      document.getElementById("feedback").textContent="Das war noch knifflig. 🌱 Wir üben mit einem weiteren einfachen Satz.";
+    if(target==="verb"||mode!=="find"){
+      optionalParts.forEach(el=>el.classList.add("verb-part-hint","verb-part-hint-strong"));
     }
+    if(adaptiveLevel>1){adaptiveLevel--;document.getElementById("feedback").textContent="Das war noch knifflig. 🌱 Der nächste Satz wird etwas leichter.";}
+    else document.getElementById("feedback").textContent="Das war noch knifflig. 🌱 Wir üben mit einem weiteren einfachen Satz.";
     checked=true;
     document.getElementById("checkBtn").classList.add("hidden");
     document.getElementById("nextBtn").classList.remove("hidden");
   }else{
     document.getElementById("feedback").textContent="Hier bekommst du einen kleinen Hinweis. Schau dir die markierten Stellen noch einmal an.";
-    setTimeout(()=>{
-      document.querySelectorAll(".word").forEach(el=>el.classList.remove("wrong","missed"));
-    },1400);
+    setTimeout(()=>document.querySelectorAll(".word").forEach(el=>el.classList.remove("wrong","missed")),1400);
   }
 }
 function nextTask(){
   index++;
   if(index>=10){endRound();return}
-  const pool=DATA[adaptiveLevel];
-  round[index]=pool[Math.floor(Math.random()*pool.length)];
+  pickNextSentence();
   renderTask();
 }
 function endRound(){
@@ -629,12 +720,157 @@ function positionMarker(id,l){
   marker.style.left=(r.left-wr.left+r.width/2-marker.offsetWidth/2)+"px";
 }
 
+
+const expertNames={numeral:"Numerale",preposition:"Präposition",pronoun:"Pronomen",conjunction:"Konjunktion"};
+const expertInfo={
+ numeral:{text:"Numerale sind Zahlwörter. Sie sagen dir zum Beispiel, wie viele es von etwas gibt.",example:"Der Prinz hat drei Schlüssel.",focus:"drei",miniWords:[["Der",false],["Prinz",false],["findet",false],["drei",true],["Schlüssel.",false]],answer:"drei"},
+ preposition:{text:"Präpositionen zeigen oft, wo etwas ist oder in welcher Beziehung Dinge zueinander stehen.",example:"Der Tiger sitzt unter dem Baum.",focus:"unter",miniWords:[["Der",false],["Tiger",false],["sitzt",false],["unter",true],["dem",false],["Baum.",false]],answer:"unter"},
+ pronoun:{text:"Pronomen können Nomen ersetzen oder Nomen begleiten. Darum nennt man sie auch Fürwörter. Häufige Pronomen sind: ich, du, er, sie, es, wir, ihr, sie. Auch Wörter wie mein, dein, sein, ihr, unser und euer können Pronomen sein. In unseren Übungen arbeiten wir zuerst mit ich, du, er, sie, es, wir, ihr und sie.",example:"Der Prinz lacht. Er ist fröhlich.",focus:"Er",miniWords:[["Die",false],["Prinzessin",false],["lacht.",false],["Sie",true],["ist",false],["fröhlich.",false]],answer:"Sie"},
+ conjunction:{text:"Konjunktionen verbinden Wörter oder Sätze miteinander.",example:"Der Tiger sammelt Blätter und der Bär kocht.",focus:"und",miniWords:[["Der",false],["Tiger",false],["lacht",false],["und",true],["der",false],["Bär",false],["winkt.",false]],answer:"und"}
+};
+function expertSymbolHTML(t){return `<i class="expert-symbol ${t}"></i>`}
+function openExpertLearn(t){
+  const x=expertInfo[t];showOnly("expertLearn");
+  document.getElementById("expertLearnTitle").textContent=expertNames[t]+" entdecken";
+  document.getElementById("expertLearnSymbol").innerHTML=expertSymbolHTML(t);
+  document.getElementById("expertLearnText").textContent=x.text;
+  document.getElementById("expertLearnExample").innerHTML=x.example.replace(x.focus,`<strong>${x.focus}</strong>`) + `<br><small>${x.focus} → ${expertNames[t]}</small>`;
+  const miniCommands={numeral:"Klicke auf das Numerale im Satz.",preposition:"Klicke auf die Präposition im Satz.",pronoun:"Klicke auf das Pronomen im Satz.",conjunction:"Klicke auf die Konjunktion im Satz."};
+  document.getElementById("expertMiniInstruction").textContent=miniCommands[t];
+  const sentence=document.getElementById("expertMiniSentence");sentence.innerHTML="";
+  x.miniWords.forEach(([word,isAnswer])=>{
+    const b=document.createElement("button");
+    b.className="expert-sentence-word";
+    b.textContent=word;
+    b.onclick=()=>answerExpertMini(t,word,b,isAnswer);
+    sentence.appendChild(b);
+  });
+  document.getElementById("expertMiniFeedback").textContent="";
+}
+function answerExpertMini(t,w,b,isAnswer){
+  document.querySelectorAll(".expert-sentence-word").forEach(e=>e.classList.remove("good","bad"));
+  if(isAnswer){
+    b.classList.add("good");
+    document.getElementById("expertMiniFeedback").innerHTML=`⭐ Genau! <strong>${w.replace(/[.,!?]$/,"")}</strong> ist ${expertNames[t]}.`;
+  }else{
+    b.classList.add("bad");
+    document.getElementById("expertMiniFeedback").textContent="Fast! Lies den ganzen Satz noch einmal und probiere es erneut.";
+  }
+}
+
+const EXPERT_STAGES=[
+ {name:"1. Numerale",newTypes:["numeral"],msg:"Heute kommt nur eine neue Wortart dazu: Numerale."},
+ {name:"2. Präpositionen",newTypes:["numeral","preposition"],msg:"Jetzt kommt die Präposition dazu. Numerale kennst du schon."},
+ {name:"3. Pronomen",newTypes:["numeral","preposition","pronoun"],msg:"Jetzt entdeckst du zusätzlich Pronomen."},
+ {name:"4. Konjunktionen",newTypes:["numeral","preposition","pronoun","conjunction"],msg:"Jetzt kommt noch die Konjunktion dazu."},
+ {name:"5. Experten-Mix",newTypes:["numeral","preposition","pronoun","conjunction"],msg:"Du kennst alle neuen Wortarten. Jetzt werden sie vorsichtig gemischt."}
+];
+const EDATA=[
+[
+ [["Die","artikel"],["drei","numeral"],["Ritter","nomen"],["tragen","verb"],["schwere","adjektiv"],["Kisten.","nomen"]],
+ [["Der","artikel"],["Prinz","nomen"],["findet","verb"],["zwei","numeral"],["goldene","adjektiv"],["Schlüssel.","nomen"]],
+ [["Die","artikel"],["Prinzessin","nomen"],["pflückt","verb"],["fünf","numeral"],["rote","adjektiv"],["Rosen.","nomen"]],
+ [["Vier","numeral"],["kleine","adjektiv"],["Vögel","nomen"],["sitzen","verb"],["auf","other"],["dem","artikel"],["Dach.","nomen"]]
+],
+[
+ [["Der","artikel"],["Tiger","nomen"],["sitzt","verb"],["unter","preposition"],["dem","artikel"],["alten","adjektiv"],["Baum.","nomen"]],
+ [["Zwei","numeral"],["Ritter","nomen"],["stehen","verb"],["vor","preposition"],["dem","artikel"],["großen","adjektiv"],["Schloss.","nomen"]],
+ [["Die","artikel"],["Katze","nomen"],["schläft","verb"],["auf","preposition"],["dem","artikel"],["weichen","adjektiv"],["Kissen.","nomen"]],
+ [["Drei","numeral"],["Äpfel","nomen"],["liegen","verb"],["in","preposition"],["der","artikel"],["kleinen","adjektiv"],["Schale.","nomen"]]
+],
+[
+ [["Der","artikel"],["Prinz","nomen"],["lacht.","verb"],["Er","pronoun"],["trägt","verb"],["eine","artikel"],["goldene","adjektiv"],["Krone.","nomen"]],
+ [["Die","artikel"],["Prinzessin","nomen"],["winkt.","verb"],["Sie","pronoun"],["steht","verb"],["vor","preposition"],["dem","artikel"],["Schloss.","nomen"]],
+ [["Der","artikel"],["Tiger","nomen"],["findet","verb"],["zwei","numeral"],["Pilze.","nomen"],["Er","pronoun"],["freut","verb"],["sich.","other"]],
+ [["Das","artikel"],["Pferd","nomen"],["läuft.","verb"],["Es","pronoun"],["ist","verb"],["schnell.","adjektiv"]]
+],
+[
+ [["Der","artikel"],["Tiger","nomen"],["sammelt","verb"],["Blätter","nomen"],["und","conjunction"],["der","artikel"],["Bär","nomen"],["kocht.","verb"]],
+ [["Die","artikel"],["Prinzessin","nomen"],["lacht,","verb"],["weil","conjunction"],["der","artikel"],["Prinz","nomen"],["tanzt.","verb"]],
+ [["Der","artikel"],["Ritter","nomen"],["wartet","verb"],["vor","preposition"],["dem","artikel"],["Tor,","nomen"],["aber","conjunction"],["er","pronoun"],["ist","verb"],["fröhlich.","adjektiv"]],
+ [["Drei","numeral"],["Vögel","nomen"],["singen","verb"],["und","conjunction"],["sie","pronoun"],["sitzen","verb"],["auf","preposition"],["dem","artikel"],["Baum.","nomen"]]
+],
+[
+ [["Die","artikel"],["zwei","numeral"],["Ritter","nomen"],["warten","verb"],["vor","preposition"],["dem","artikel"],["Schloss.","nomen"]],
+ [["Der","artikel"],["Tiger","nomen"],["sieht","verb"],["drei","numeral"],["Pilze","nomen"],["und","conjunction"],["er","pronoun"],["sammelt","verb"],["sie.","pronoun"]],
+ [["Die","artikel"],["Prinzessin","nomen"],["steht","verb"],["am","preposition"],["Fenster,","nomen"],["weil","conjunction"],["sie","pronoun"],["zwei","numeral"],["Vögel","nomen"],["beobachtet.","verb"]],
+ [["Vier","numeral"],["Kinder","nomen"],["spielen","verb"],["hinter","preposition"],["dem","artikel"],["Schloss","nomen"],["und","conjunction"],["sie","pronoun"],["lachen.","verb"]]
+]
+];
+let expertStage=0,expertIndex=0,expertCorrect=0,expertSelected=null,expertChecked=false,expertAttempts=0;
+const baseTypes=["nomen","verb","adjektiv","artikel"];
+function startExpertPath(){expertStage=0;expertIndex=0;expertCorrect=0;showOnly("expertGame");renderExpertTask()}
+function expertAllTypes(){return baseTypes.concat(EXPERT_STAGES[expertStage].newTypes)}
+function renderExpertToolbar(){
+ const box=document.getElementById("expertToolbar");box.innerHTML="";
+ expertAllTypes().forEach(t=>{
+   const d=document.createElement("div");d.className="tool expert-tool";d.dataset.type=t;
+   d.innerHTML=(baseTypes.includes(t)?symbolHTML(t):expertSymbolHTML(t))+`<span>${names[t]||expertNames[t]}</span>`;
+   d.onclick=()=>{expertSelected=t;box.querySelectorAll(".tool").forEach(x=>x.classList.remove("active"));d.classList.add("active")};
+   box.appendChild(d);
+ });
+}
+function renderExpertTask(){
+ expertChecked=false;expertAttempts=0;expertSelected=null;
+ document.getElementById("expertCheckBtn").classList.remove("hidden");document.getElementById("expertNextBtn").classList.add("hidden");
+ document.getElementById("expertFeedback").textContent="";
+ const st=EXPERT_STAGES[expertStage], task=EDATA[expertStage][expertIndex%EDATA[expertStage].length];
+ document.getElementById("expertStageLabel").innerHTML=`<span class="expert-stage-pill">⭐ ${st.name}</span>`;
+ document.getElementById("expertInstruction").textContent=st.msg+" Ziehe das passende Wortarten-Symbol zu jedem Wort.";
+ renderExpertToolbar();
+ const box=document.getElementById("expertSentence");box.innerHTML="";
+ task.forEach((it,i)=>{
+   const e=document.createElement("span");e.className="word";e.dataset.correct=it[1];e.dataset.assigned="";e.innerHTML=`<span>${it[0]}</span>`;
+   e.onclick=()=>{if(!expertChecked&&expertSelected)assignExpert(e,expertSelected)};box.appendChild(e);
+ });
+ document.getElementById("expertGameProgress").textContent=`Station ${expertStage+1} von 5 · Aufgabe ${expertIndex+1} von 4`;
+}
+function assignExpert(el,t){
+ if(!expertAllTypes().includes(t))return;el.dataset.assigned=t;
+ const old=el.querySelector(".placed-symbol");if(old)old.remove();
+ const w=document.createElement("span");w.className="placed-symbol";w.innerHTML=baseTypes.includes(t)?symbolHTML(t):expertSymbolHTML(t);el.appendChild(w);
+}
+function checkExpertTask(){
+ let ok=true,missedNew=[];
+ document.querySelectorAll("#expertSentence .word").forEach(el=>{
+   el.classList.remove("correct","wrong","missed");
+   const c=el.dataset.correct,a=el.dataset.assigned;
+   if(c==="other"){if(a){ok=false;el.classList.add("wrong")}}
+   else if(a===c)el.classList.add("correct");
+   else{ok=false;el.classList.add("missed");if(!baseTypes.includes(c))missedNew.push(c)}
+ });
+ if(ok){
+   expertChecked=true;expertCorrect++;
+   document.getElementById("expertFeedback").textContent="⭐ Super! Du hast auch die neue Wortart erkannt.";
+   document.getElementById("expertCheckBtn").classList.add("hidden");document.getElementById("expertNextBtn").classList.remove("hidden");return;
+ }
+ expertAttempts++;
+ if(expertAttempts===1 && missedNew.length){
+   document.querySelectorAll("#expertSentence .word").forEach(el=>el.classList.remove("wrong","missed"));
+   const t=missedNew[0];
+   document.getElementById("expertFeedback").innerHTML=`Fast geschafft! ⭐ Schau noch einmal nach <strong>${expertNames[t]}</strong>. Die neue Wortart darfst du noch einmal suchen.`;
+ }else{
+   document.getElementById("expertFeedback").textContent="Du bekommst einen kleinen Hinweis: Die markierten Stellen kannst du noch einmal prüfen.";
+ }
+}
+function nextExpertTask(){
+ expertIndex++;
+ if(expertIndex>=4){expertIndex=0;expertStage++}
+ if(expertStage>=5){
+   showOnly("expertSummary");
+   document.getElementById("expertFinalMessage").textContent=`Du hast den ganzen Lernweg geschafft und ${expertCorrect} von 20 Aufgaben direkt richtig gelöst.`;
+   return;
+ }
+ renderExpertTask();
+}
+
 function bindTap(el, fn){
   if(!el) return;
   el.addEventListener("click", fn, {passive:false});
 }
 bindTap(document.getElementById("findModeBtn"), ()=>chooseMode("find"));
 bindTap(document.getElementById("assignModeBtn"), ()=>chooseMode("assign"));
+bindTap(document.getElementById("expertModeBtn"), ()=>showOnly("expertHome"));
 document.querySelectorAll(".targetBtn").forEach(b=>bindTap(b,()=>chooseTarget(b.dataset.target)));
 document.querySelectorAll(".level-btn").forEach(b=>bindTap(b,()=>startRound(Number(b.dataset.level))));
 
