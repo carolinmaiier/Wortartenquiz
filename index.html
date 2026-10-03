@@ -375,6 +375,30 @@ body{background:linear-gradient(135deg,#f4ad68,#f8d1a8)}
 .expert-sentence-word.good{background:#dff5df!important;outline:3px solid #72b672}
 .expert-sentence-word.bad{background:#ffe2e2!important}
 
+
+/* V18 – eindeutiges Erfolgsfeedback */
+#sentence.success-flash{animation:successFlash .75s ease}
+@keyframes successFlash{
+  0%{filter:none;transform:scale(1)}
+  35%{filter:drop-shadow(0 0 14px rgba(65,170,85,.55));transform:scale(1.015)}
+  100%{filter:none;transform:scale(1)}
+}
+.success-feedback{
+  background:#e4f7e7!important;
+  border:2px solid #77bd82!important;
+  border-radius:16px;
+  padding:12px 16px;
+  font-size:21px!important;
+  font-weight:800;
+}
+.confetti-piece{
+  position:fixed;top:-18px;z-index:9999;width:10px;height:16px;border-radius:2px;
+  pointer-events:none;animation:confettiFall 1.25s ease-in forwards;
+}
+@keyframes confettiFall{
+  to{transform:translate(var(--drift),105vh) rotate(540deg);opacity:.2}
+}
+
 </style>
 </head>
 <body>
@@ -577,7 +601,7 @@ function directFindInstruction(){
 }
 function renderTask(){
   checked=false;selectedTool=null;wrongAttempts=0;
-  document.getElementById("feedback").textContent="";
+  document.getElementById("feedback").textContent=""; document.getElementById("feedback").classList.remove("success-feedback");
   document.getElementById("nextBtn").classList.add("hidden");
   document.getElementById("checkBtn").classList.remove("hidden");
   document.querySelectorAll(".tool").forEach(x=>x.classList.remove("active"));
@@ -606,8 +630,19 @@ function renderTask(){
 }
 function wordClicked(el){
   if(checked)return;
-  if(mode==="find"){el.classList.toggle("selected");}
-  else if(selectedTool){assign(el,selectedTool);}
+  if(mode==="find"){
+    if(wrongAttempts>0 && !el.classList.contains("selected")){
+      document.querySelectorAll("#sentence .word.selected").forEach(prev=>{
+        const isTarget = prev.dataset.correct===target ||
+          (target==="verb" && prev.dataset.verbPart==="true");
+        if(!isTarget) prev.classList.remove("selected");
+      });
+    }
+    el.classList.toggle("selected");
+    el.classList.remove("wrong","missed");
+  }else if(selectedTool){
+    assign(el,selectedTool);
+  }
 }
 function assign(el,type){
   if(checked||!types.includes(type))return;
@@ -629,9 +664,31 @@ document.querySelectorAll(".tool").forEach(tool=>{
     tool.classList.add("active");
   },{passive:true});
 });
+
+function celebrateCorrect(){
+  const sentence=document.getElementById("sentence");
+  sentence.classList.remove("success-flash");
+  void sentence.offsetWidth;
+  sentence.classList.add("success-flash");
+  const feedback=document.getElementById("feedback");
+  feedback.classList.add("success-feedback");
+  setTimeout(()=>feedback.classList.remove("success-feedback"),1500);
+  const colors=["#f5b942","#7eb6e6","#ef7d9b","#79bd82","#b58bd4"];
+  for(let i=0;i<22;i++){
+    const p=document.createElement("i");
+    p.className="confetti-piece";
+    p.style.left=(15+Math.random()*70)+"vw";
+    p.style.background=colors[i%colors.length];
+    p.style.setProperty("--drift",(-70+Math.random()*140)+"px");
+    p.style.animationDelay=(Math.random()*.18)+"s";
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),1500);
+  }
+}
+
 function checkTask(){
   let ok=true, results=[], optionalParts=[];
-  document.querySelectorAll(".word").forEach(el=>{
+  document.querySelectorAll("#sentence .word").forEach(el=>{
     el.classList.remove("correct","wrong","missed","verb-part-hint","verb-part-hint-strong");
     const correct=el.dataset.correct, isPart=el.dataset.verbPart==="true";
     let state="", wordOK=true;
@@ -664,6 +721,7 @@ function checkTask(){
     results.forEach(r=>{if(r.state)r.el.classList.add(r.state)});
     checked=true;correctCount++;successStreak++;
     if(successStreak>=2){if(adaptiveLevel<level) adaptiveLevel++;successStreak=0}
+    celebrateCorrect();
     if(optionalParts.length && (target==="verb" || mode!=="find")){
       optionalParts.forEach(el=>el.classList.add("verb-part-hint"));
       setTimeout(()=>optionalParts.forEach(el=>el.classList.add("verb-part-hint-strong")),180);
@@ -692,7 +750,7 @@ function checkTask(){
     document.getElementById("nextBtn").classList.remove("hidden");
   }else{
     document.getElementById("feedback").textContent="Hier bekommst du einen kleinen Hinweis. Schau dir die markierten Stellen noch einmal an.";
-    setTimeout(()=>document.querySelectorAll(".word").forEach(el=>el.classList.remove("wrong","missed")),1400);
+    setTimeout(()=>document.querySelectorAll("#sentence .word").forEach(el=>el.classList.remove("wrong","missed")),1400);
   }
 }
 function nextTask(){
